@@ -9,20 +9,20 @@ library(dplyr)
 test.years <- c(2017, 2018)
 
 # global parameters: dimension
-if (!file.exists("../usa_results/predictions/BART_prediction_monthly_2019.csv")) {
+if (!file.exists("./predictions/BART_prediction_monthly_2019.csv")) {
   loginfo("Prediction file doesn't exist, generating new file")
   results <- data.frame(matrix(ncol = 7, nrow = 0)) 
   colnames(results) <- c("Year", "month", "State", "Ag_District",
                         "prediction_mean", "prediction_lower_95", 
                         "prediction_upper_95")
-  write.csv(results, "../usa_results/predictions/BART_prediction_monthly_2019.csv", row.names = FALSE)
+  write.csv(results, "./predictions/BART_prediction_monthly_2019.csv", row.names = FALSE)
 }
 
 test.month.beginning <- 2
 test.month.end <- 10
 
 loginfo("Overwriting existing prediction file")
-results <- read.csv("../usa_results/predictions/BART_prediction_monthly_2019.csv")
+results <- read.csv("./predictions/BART_prediction_monthly_2019.csv")
 
 print("Selecting Features")
 features <- c("State", "Ag_District", "Year", "month", 
@@ -31,7 +31,7 @@ features <- c("State", "Ag_District", "Year", "month",
               "Lat", "Long")
 num_features <- length(features)
 
-data <- read.csv("../experiment_data/data.csv")
+data <- read.csv("../../data/usa/data.csv")
 
 plc_holder <- select(data, features)
 
@@ -48,7 +48,7 @@ for (test.month in test.month.beginning:test.month.end)
   # stack data
   test.stacked <- stack.test(test.data.month, features)
   
-  load("../usa_results/BART_%s.RData" %--% c(test.month))
+  load("./predictions/BART_%s.RData" %--% c(test.month))
   predictions <- predict.bart.month(model, test.stacked)
   
   tmp <- data.frame(
@@ -71,14 +71,14 @@ for (test.month in test.month.beginning:test.month.end)
     results <- rbind(results, tmp)
   }
   
-  jpeg("../usa_results/predictions/BART_prediction_%s-%s.jpg" %--% c(test.month, test.years) ,width = 1000, height = 1000)
+  jpeg("./predictions/BART_prediction_%s-%s.jpg" %--% c(test.month, test.years) ,width = 1000, height = 1000)
   #plot(c(1:6), predictions[[2]], ylim= c(0,8000), main="2017-2018 RMSE Training: %s"%--%model$rmse_train)
   #text(c(1:6), predictions[[2]], labels=predictions[[1]], cex= 0.7, pos=3)
   #arrows(x0=c(1:6), y0=predictions[[3]]$interval[,1], 
   #       x1=c(1:6), y1=predictions[[3]]$interval[,2], length=0.05, angle=90, code=3)
   #dev.off()
 
-  jpeg("../usa_results/predictions/BART_importance_monthly_%s-%s.jpg" %--% c(test.month, test.years) ,width = 1000, height = 1000)
+  jpeg("./predictions/BART_importance_monthly_%s-%s.jpg" %--% c(test.month, test.years) ,width = 1000, height = 1000)
   avg_var_props <- investigate_var_importance(model)
   dev.off()  
   
@@ -87,8 +87,8 @@ for (test.month in test.month.beginning:test.month.end)
     "average_inclusion_proportion" = unname(avg_var_props$avg_var_props),
     "sd_inclusion_proportion" = unname(avg_var_props$sd_var_props)
   )
-  write.csv(drivers, "../usa_results/predictions/BART_importance_monthly_%s-%s.csv" %--% c(test.month, test.years), row.names = FALSE)
+  write.csv(drivers, "./predictions/BART_importance_monthly_%s-%s.csv" %--% c(test.month, test.years), row.names = FALSE)
 }
 
 
-write.csv(results, "../usa_results/predictions/BART_prediction_monthly_2019.csv", row.names = FALSE)
+write.csv(results, "./predictions/BART_prediction_monthly_2019.csv", row.names = FALSE)

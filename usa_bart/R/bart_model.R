@@ -38,7 +38,7 @@ train.model.month <- function(model.month,
     sink()
     if (save_flag == TRUE) {
       loginfo("Saving model")
-      save(model, file = "../usa_results/BART_%s.RData" %--% c( model.month))
+      save(model, file = "./predictions/BART_%s.RData" %--% c( model.month))
     }
   }
   return (model)

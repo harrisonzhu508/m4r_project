@@ -16,7 +16,7 @@ features <- c("State", "Ag_District", "Year", "month",
               "Lat", "Long", "Crop_Yield")
 num_features <- length(features)
 
-data <- read.csv("../experiment_data/data.csv")
+data <- read.csv("../../data/usa/data.csv")
 
 # omit year
 data <- data[!(data$Year %in% omit.years),]
