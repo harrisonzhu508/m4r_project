@@ -26,7 +26,7 @@ Simply run the following commands from the root `m4r_project` folder:
 cd usa_bart/R
 ./run_monthly.sh
 ```
-This will produce plots and saved models in the `sweden_bart/saved/` folder. Then open `notebooks/usa.ipynb` and configure to run the XGB-GP models and full analysis.
+This will produce plots and saved models in the `usa_bart/saved/` folder. Then open `notebooks/usa.ipynb` and configure to run the XGB-GP models and full analysis.
 
 
 ## Other code
